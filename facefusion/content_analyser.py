@@ -73,12 +73,20 @@ def analyse_stream(vision_frame : VisionFrame, video_fps : Fps) -> bool:
 	return False
 
 
+# def analyse_frame(vision_frame : VisionFrame) -> bool:
+# 	vision_frame = prepare_frame(vision_frame)
+# 	probability = forward(vision_frame)
+
+# 	return probability > PROBABILITY_LIMIT
+
 def analyse_frame(vision_frame : VisionFrame) -> bool:
-	vision_frame = prepare_frame(vision_frame)
-	probability = forward(vision_frame)
-
-	return probability > PROBABILITY_LIMIT
-
+    # Check if the frame is empty
+    if vision_frame is None or vision_frame.size == 0:
+        print("Warning: Empty frame encountered in analyse_frame. Skipping processing for this frame.")
+        return False
+    vision_frame = prepare_frame(vision_frame)
+    probability = forward(vision_frame)
+    return probability > PROBABILITY_LIMIT
 
 def forward(vision_frame : VisionFrame) -> float:
 	content_analyser = get_inference_pool().get('content_analyser')
